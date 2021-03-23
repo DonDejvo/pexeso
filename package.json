@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/DonDejvo/pexeso/issues"
   },
-  "homepage": "https://github.com/DonDejvo/pexeso#readme"
+  "homepage": "https://github.com/DonDejvo/pexeso#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
