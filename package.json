@@ -1,0 +1,19 @@
+{
+  "name": "pexeso",
+  "version": "1.0.0",
+  "description": "online pexeso",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DonDejvo/pexeso.git"
+  },
+  "author": "DonDejvo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DonDejvo/pexeso/issues"
+  },
+  "homepage": "https://github.com/DonDejvo/pexeso#readme"
+}
