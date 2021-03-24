@@ -6,6 +6,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+const FRAME_RATE = 30;
 const BOARD_SIZE = 36;
 const STATE = {
   NOT_STARTED: 0,
@@ -25,8 +26,35 @@ io.on('connection', (socket) => {
   socket.on("joinGame", handleJoinGame);
   socket.on("submitMove", handleSubmitMove);
 
-  function handleJoinGame() {
+  function handleJoinGame(roomName) {
 
+    const room = io.sockets.adapter.rooms[roomName];
+
+    let users;
+    if(room) {
+      const users = room.sockets;
+    }
+
+    let num_users = 0;
+    if(users) {
+      num_users = Object.keys(users).length;
+    }
+
+    if(num_users == 0) {
+      socket.emit("unknownCode");
+      return;
+    } else if(num_users > 1) {
+      socket.emit("tooManyPlayers");
+      return;
+    }
+
+    clientRooms[socket.id] = roomName;
+
+    socket.join(roomName);
+    socket.number = 2;
+    socket.emit("init", 2);
+
+    startGameInterval(roomName);
   }
 
   function handleNewGame() {
@@ -36,10 +64,45 @@ io.on('connection', (socket) => {
     socket.emit("gameCode", roomName);
 
     state[roomName] = initGame();
+
+    socket.join(roomName);
+    socket.number = 1;
+    socket.emit("init", 1);
   }
 
-  function handleSubmitMove() {
+  function handleSubmitMove(card_nums) {
 
+    const roomName = clientRooms[socket.id];
+    if(!roomName) {
+      return;
+    }
+    
+    const roomState = state[roomName];
+    if((roomState.state == STATE.ONE_PLAYING && socket.number == 1) &&
+    (roomState.state == STATE.TWO_PLAYING && socket.number == 2)) {
+
+      try {
+
+        const num1 = card_nums[0];
+        const num2 = card_nums[1];
+
+        if(roomState.board[num1] == undefined || roomState.board[num2] == undefined) {
+          return;
+        }
+
+        roomState.move[0] = num1;
+        roomState.move[1] = num2;
+
+        if(roomState.move[0] == roomState.move[1]) {
+          roomState.guessed.push(roomState.move[0], roomState.move[1]);
+          roomState.players[socket.number - 1].score++;
+        }
+      } catch(e) {
+
+        console.error(e);
+      }
+
+    }
   }
 });
 
@@ -47,10 +110,46 @@ http.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
+function gameLoop(state) {
+
+  return { finished: false, result: [0, 0] };
+}
+
+function startGameInterval(roomName) {
+
+  const interval = setInterval(() => {
+
+    const game = gameLoop(state[roomName]);
+
+    if(!game.finished) {
+      emitGameState(roomName);
+    } else {
+      emitGameOver(roomName, game.result);
+      clearInterval(interval);
+    }
+  }, 1000 / FRAME_RATE);
+}
+
+function emitGameState(room) {
+
+  const roomState = state[room];
+  const board = Array(BOARD_SIZE).fill(0).map(e => -1);
+
+  roomState.guessed.forEach(e => {
+    board[e] = roomState.board[e];
+  });
+  
+  io.sockets.in(room).emit("gameState", JSON.stringify({ board: board, players: roomState.players, move: roomState.move }));
+}
+
+function emitGameOver(room, result) {
+  io.sockets.in(room).emit("gameOver", JSON.stringify({ result }));
+}
+
 function initGame() {
-  const state = createGameState();
-  shuffleBoard(state);
-  return state;
+  const roomState = createGameState();
+  shuffleBoard(roomState);
+  return roomState;
 }
 
 function createGameState() {
@@ -60,12 +159,13 @@ function createGameState() {
     state: STATE.NOT_STARTED,
     move: Array(2),
     guessed: [],
-    board: Array(BOARD_SIZE).fill(0).map((e, i) = i % (BOARD_SIZE / 2));
+    players: [ { score: 0 }, { score: 0 } ],
+    board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2))
   };
 }
 
-function shuffleBoard(gameState) {
-  const arr = gameState.board;
+function shuffleBoard(state) {
+  const arr = state.board;
   const len = arr.length;
   for(let i = len - 1; i > 0; i--) {
     const j = randint(i);
