@@ -60,7 +60,7 @@ function createGameState() {
     state: STATE.NOT_STARTED,
     move: Array(2),
     guessed: [],
-    board: Array(BOARD_SIZE).fill(0).map((e, i) = i % (BOARD_SIZE / 2));
+    board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2))
   };
 }
 
