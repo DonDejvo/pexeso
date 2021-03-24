@@ -159,7 +159,10 @@ function createGameState() {
     state: STATE.NOT_STARTED,
     move: Array(2),
     guessed: [],
+<<<<<<< HEAD
     players: [ { score: 0 }, { score: 0 } ],
+=======
+>>>>>>> 7b8013a27b2d398dafe89395b12f423dee6aefd7
     board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2))
   };
 }
