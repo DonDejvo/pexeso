@@ -1,0 +1,45 @@
+body {
+  padding: 0;
+  margin: 0;   
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+
+}
+
+/* Cards class, not winning*/
+.cards {
+    width: 60px;
+    height: 60px;
+    background: black;
+	margin: 1px;
+	float: left;
+	cursor: pointer;
+	font-size: 40px;
+	text-align: center;
+}
+
+/* Winning class*/
+.win {
+    width: 60px;
+    height: 60px;
+    //background: pink;
+	margin: 1px;
+	float: left;
+	cursor: pointer;
+	font-size: 40px;
+	text-align: center;
+}
+
+#board {
+	width: 100%;
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+h1 {text-align: center;}
+
+//#board { width: calc(12 * 24px); margin: auto; }
+
+//#board div { background-color: black; border: 0.7px solid #d7d7d7; box-sizing: border-box; float: left; width: 24px; height: 24px; }
