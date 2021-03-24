@@ -120,6 +120,8 @@ function gameLoop(roomState) {
 
   roomState.timer++;
 
+  if()
+
   return { finished: false, result: [0, 0] };
 }
 
@@ -168,7 +170,8 @@ function createGameState() {
     move: Array(2),
     guessed: [],
     players: [ { score: 0 }, { score: 0 } ],
-    board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2))
+    board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2)),
+    last: undefined
   };
 }
 
