@@ -100,6 +100,9 @@ io.on('connection', (socket) => {
           roomState.guessed.push(roomState.move[0], roomState.move[1]);
           roomState.players[socket.number - 1].score++;
         }
+
+        roomState.timer = 0;
+        roomState.state = STATE.SHOWING;
       } catch(e) {
 
         console.error(e);
@@ -113,7 +116,9 @@ http.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
-function gameLoop(state) {
+function gameLoop(roomState) {
+
+  roomState.timer++;
 
   return { finished: false, result: [0, 0] };
 }
