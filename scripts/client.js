@@ -51,6 +51,7 @@ socket.on("init", handleInit);
 socket.on("gameCode", handleGameCode);
 socket.on("unknownCode", handleUnknownCode);
 socket.on("tooManyPlayers", handleTooManyPlayers);
+socket.on("gameState", handleGameState);
 
 function handleInit(num) {
 	id("menu").style.display = "none";
@@ -63,11 +64,15 @@ function handleGameCode(code) {
 }
 
 function handleUnknownCode() {
-
+	alert("Unknown code");
 }
 
 function handleTooManyPlayers() {
+	alert("Too many players");
+}
 
+function handleGameState() {
+	
 }
 
 /* function gothru() {
