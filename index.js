@@ -126,10 +126,13 @@ function gameLoop(roomState) {
 
   roomState.timer++;
 
-  if(roomState.state == STATE.SHOWING && roomState.timer > 60) {
+  if(roomState.state == STATE.SHOWING && roomState.timer > FRAME_RATE * 3) {
+
     timer = 0;
     roomState.state = roomState.last == 2 ? STATE.ONE_PLAYING : STATE.TWO_PLAYING;
-  } else if((roomState.state == STATE.ONE_PLAYING || roomState.state == STATE.TWO_PLAYING) && roomState.timer > 200) {
+  } else if((roomState.state == STATE.ONE_PLAYING || roomState.state == STATE.TWO_PLAYING) && 
+  roomState.timer > FRAME_RATE * 15) {
+    
     timer = 0;
     roomState = roomState.state == STATE.ONE_PLAYING ? STATE.TWO_PLAYING : STATE.ONE_PLAYING;
   }
@@ -163,7 +166,7 @@ function emitGameState(room) {
     board[e] = roomState.board[e];
   });
   
-  io.sockets.in(room).emit("gameState", JSON.stringify({ board: board, players: roomState.players, timer: roomState.timer }));
+  io.sockets.in(room).emit("gameState", JSON.stringify({ state: roomState.state, board: board, players: roomState.players, timer: roomState.timer }));
 }
 
 function emitMove(room) {

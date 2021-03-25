@@ -7,10 +7,16 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello World</h1>
+	<div>
+		<button>create game</button>
+		<br>
+		<button>join game</button>
+		<input type="text" placeholder="game code">
+	</div>
+    <div id="root"></div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-//const socket = io();
+const socket = io();
 
 
 function id(arg){
@@ -236,9 +242,9 @@ function shuffleArray(array) {
 // Init
 ///////////////////////////
 function init() {
-	document.body.innerHTML = '<h1>PEXESO</h1>';
-	document.body.innerHTML += '<div id="board"></div>';
-	document.body.innerHTML += '<div id="p1">p1: 0</div>' + '<div id="p2">p2: 0</div>'
+	id("root").innerHTML = '<h1>PEXESO</h1>';
+	id("root").innerHTML += '<div id="board"></div>';
+	id("root").innerHTML += '<div id="p1">p1: 0</div>' + '<div id="p2">p2: 0</div>'
 	id('p1').style.color = "red";
 	boardElement = id('board');
 	make2Darray();
