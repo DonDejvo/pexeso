@@ -19,9 +19,22 @@
 const socket = io();
 
 
+
+// Selector
 function id(arg){
   return document.getElementById(arg);
 } 
+
+// Short console.log
+var log = console.log;
+
+// Dirty error handling
+function stoperror(){
+  return true;
+} //window.onerror = stoperror;
+
+
+
 
 
 let boardElement = null;
@@ -80,6 +93,13 @@ const emojis = [
 } */
 
 
+function info(txt) {
+    id("infos").style.display = 'flex';
+    id("outputinfos").innerText = txt;
+    setTimeout(()=>id("infos").style.display = 'none', 1000)
+}
+
+
 //////////////////////////////////////////////////////////
 let p1 = {
 	move: true,
@@ -94,6 +114,8 @@ let p2 = {
 function handleMoves() {
 	p1.move = p1.move === true ? false : true;
 	p2.move = p2.move === true ? false : true;
+	info("NEXT PLAYER");
+	//log(p1.move, p2.move);
 	
 	if(p1.move && !p2.move) {
 		id('p1').style.color = "red";
@@ -104,6 +126,32 @@ function handleMoves() {
 		id('p1').style.color = "black";
 	}
 }
+
+///////////////////////////////////////////////
+// Timing function
+let LASTTIME = 0;
+let INTERVAL = 5000;
+function loopRAF() {
+	let now = Date.now();
+	if(!LASTTIME) LASTTIME = now;
+	let dt = (now - LASTTIME);
+	if(dt >= INTERVAL) {
+		LASTTIME = now;
+		log(dt);
+		handleMoves();
+	}
+	
+	requestAnimationFrame(loopRAF);
+}
+// Run rAF in loop
+loopRAF();
+
+
+function cancelLoopRAF () {
+	cancelAnimationFrame(loopRAF);
+}
+
+///////////////////////////////////////////////
 
 function incrementScore() {
 	p1.move === true? p1.score++ : p1.score += 0;
@@ -157,12 +205,16 @@ function test(event) {
 			// Add and update players score
 			incrementScore();
 			updateScore();
+			LASTTIME = 0;
+			//intervalChange();
 			// Repeat process
 			clicked = false;
 		}
 		else if(first && second && first.innerHTML !== second.innerHTML) {
 			// Handle player moves, if player 1 or player 2 is on move
 			handleMoves();
+			LASTTIME = 0;
+			//intervalChange();
 			// Remove listeners and stop unwanted clicks
 			document.querySelectorAll('.cards').forEach(item => {
 			item.removeEventListener('click', test)
@@ -192,6 +244,7 @@ function test(event) {
 	else {
 		// Repeat process
 		clicked = false;
+		LASTTIME = 0;
 	}
 }
 
@@ -242,9 +295,10 @@ function shuffleArray(array) {
 // Init
 ///////////////////////////
 function init() {
-	id("root").innerHTML = '<h1>PEXESO</h1>';
-	id("root").innerHTML += '<div id="board"></div>';
-	id("root").innerHTML += '<div id="p1">p1: 0</div>' + '<div id="p2">p2: 0</div>'
+	document.body.innerHTML = '<h1>PEXESO</h1>';
+	document.body.innerHTML += '<div id="board"></div>';
+	document.body.innerHTML += '<div id="p1">p1: 0</div>' + '<div id="p2">p2: 0</div>'
+	document.body.innerHTML += '<div id="infos">' +'<div id="outputinfos"></div>'+'</div>'
 	id('p1').style.color = "red";
 	boardElement = id('board');
 	make2Darray();
@@ -253,7 +307,3 @@ function init() {
 }
 
 onload = init;
-		
-    </script>
-</body>
-</html>
