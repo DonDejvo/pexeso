@@ -43,3 +43,22 @@ h1 {text-align: center;}
 //#board { width: calc(12 * 24px); margin: auto; }
 
 //#board div { background-color: black; border: 0.7px solid #d7d7d7; box-sizing: border-box; float: left; width: 24px; height: 24px; }
+
+/*Info*/
+#infos{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    color: black;
+    top:0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+#outputinfos{
+    font-size:4em;
+    text-align: center;
+    color:red;
+}
