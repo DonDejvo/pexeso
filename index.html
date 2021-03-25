@@ -33,7 +33,12 @@ function stoperror(){
   return true;
 } //window.onerror = stoperror;
 
-
+// Info text
+function info(txt) {
+    id("infos").style.display = 'flex';
+    id("outputinfos").innerText = txt;
+    setTimeout(()=>id("infos").style.display = 'none', 1000)
+}
 
 
 
@@ -91,13 +96,6 @@ const emojis = [
 		}
 	}
 } */
-
-
-function info(txt) {
-    id("infos").style.display = 'flex';
-    id("outputinfos").innerText = txt;
-    setTimeout(()=>id("infos").style.display = 'none', 1000)
-}
 
 
 //////////////////////////////////////////////////////////
@@ -205,16 +203,16 @@ function test(event) {
 			// Add and update players score
 			incrementScore();
 			updateScore();
+			// Reset time
 			LASTTIME = 0;
-			//intervalChange();
 			// Repeat process
 			clicked = false;
 		}
 		else if(first && second && first.innerHTML !== second.innerHTML) {
 			// Handle player moves, if player 1 or player 2 is on move
 			handleMoves();
+			// Reset time
 			LASTTIME = 0;
-			//intervalChange();
 			// Remove listeners and stop unwanted clicks
 			document.querySelectorAll('.cards').forEach(item => {
 			item.removeEventListener('click', test)
@@ -242,7 +240,7 @@ function test(event) {
 		//console.log("clicked 2 times");
 	}
 	else {
-		// Repeat process
+		// Repeat process and reset time
 		clicked = false;
 		LASTTIME = 0;
 	}
@@ -251,13 +249,19 @@ function test(event) {
 //////////////////////////////////////////////////////////
 
 const listeners = () => {
-
-	document.querySelectorAll('.cards').forEach(item => {
-		item.addEventListener('click', test)
-	});
+    // Event listener for each card
+    document.querySelectorAll('.cards').forEach(item => {
+      item.addEventListener('click', test)
+    });
     //handle click
-	//console.log(event.target);
-	//console.log(this);
+    //console.log(event.target);
+    //console.log(this);
+	
+    // Event listener on menu
+    id("menuCreateGame").addEventListener("click", menuCreateGame);
+    id("menuJoinGame").addEventListener("click", menuJoinGame);
+    id("menuAbout").addEventListener("click", menuAbout);
+    id("menuExit").addEventListener("click", menuExit);
 };
 
 //////////////////////////////////////////////////////////
@@ -290,6 +294,42 @@ function shuffleArray(array) {
 // Shuffle
 ///////////////////////////
 
+	    
+///////////////////////////
+// Menu
+///////////////////////////
+function menuCreateGame(){
+  // Game runs in background so after clicking on createGame time and moves resets
+  p2.move = false; p1.move = true; LASTTIME = 0;  
+  id("menu").style.display = "none";
+}
+function menuJoinGame(){
+  p2.move = false; p1.move = true; LASTTIME = 0;   
+  id("menu").style.display = "none";
+}
+function menuAbout(){
+  p2.move = false; p1.move = true; LASTTIME = 0;    
+  id("menu").style.display = "none";
+} 
+function menuExit(){
+  p2.move = false; p1.move = true; LASTTIME = 0;  
+  id("menu").style.display = "none";
+}
+	    
+function menu() {
+  document.body.innerHTML +=
+    '<div class="wrapper">'+
+      '<div id="menu">'+
+         '<div class="nadpis">'+'<h1>PEXESO</h1>'+'</div>'+
+	   '<div class="nadpis2">'+'<h3>multiplayer game</h3>'+'</div>'+
+	     '<button id="menuCreateGame">Create Game</button>'+
+	     '<button id="menuJoinGame">Join Game</button>'+
+	     '<button id="menuAbout">About</button>'+
+             '<button id="menuExit">Exit</button>'+
+	 '</div>'+
+    '</div>';
+}
+
 
 ///////////////////////////
 // Init
@@ -303,7 +343,8 @@ function init() {
 	boardElement = id('board');
 	make2Darray();
 	shuffle(); // Shuffle array
-	listeners();
+	menu(); // Show menu
+	listeners(); // Add event listeners
 }
 
 onload = init;
