@@ -1,88 +1,40 @@
-///////////////////////////////////
-//////////// UTILITIES ////////////
-///////////////////////////////////
+const log = console.log;
 
-// Selector
-function id(arg){
-  return document.getElementById(arg);
-} 
+const emojis = [
+	"👹",
+	"👹","🐶",
+	"👹","🐱",
+	"👹","🐭",
+	"👹","🐹",
+	"👹","🐰",
+	"👹","🦊",
+	"👹","🐻",
+	"👹","🐼",
+	"👹","🐨",
+	"👹","🐯",
+	"👹","🦁",
+	"👹","🐮",
+	"👹","🐷",
+	"👹","🐸",
+	"👹","🐵",
+	"👹","🐥",
+	"👹","🦉",
+	"👹","🐺"
+	];
 
-// Short console.log
-var log = console.log;
+const socket = io();
 
-// Dirty error handling
-function stoperror(){
-  return true;
-} //window.onerror = stoperror;
-
-// Info text
-function info(txt) {
-    id("infos").style.display = 'flex';
-    id("outputinfos").innerText = txt;
-    setTimeout(()=>id("infos").style.display = 'none', 1000)
-}
-
-
-
-
-
+let playerNum;
 let boardElement = null;
 const board = [];
 const grid = 6;
 
-function make2Darray() {
-// Counter to make pair values	
-let c = 0;
-	for(let i = 0; i < grid; i++) {
-		let row = [];
-		
-		for(let j = 0; j < grid; j++) {
-			let col = document.createElement('div');
-			col.className = 'cards';
-			// Increment c
-			c++;
-			// Write c value only if its %2
-			col.innerHTML = c%2 ==0 ? c : c+1;
-			boardElement.appendChild(col);
-			row.push(col);
-		}
-		
-		board.push(row);
-	}
-}
+let LASTTIME = 0;
+let INTERVAL = 5000;
 
-const emojis = [
-"👹",
-"👹","🐶",
-"👹","🐱",
-"👹","🐭",
-"👹","🐹",
-"👹","🐰",
-"👹","🦊",
-"👹","🐻",
-"👹","🐼",
-"👹","🐨",
-"👹","🐯",
-"👹","🦁",
-"👹","🐮",
-"👹","🐷",
-"👹","🐸",
-"👹","🐵",
-"👹","🐥",
-"👹","🦉",
-"👹","🐺"
-];
+let clicked, first, second = null;
+let tempFirst, tempSecond = null;
 
-/* function gothru() {
-	for(let row = 0; row < board.length; row++) {
-		for(let col = 0; col < board[row].length; col++) {
-			console.log(board[row][col]);
-		}
-	}
-} */
-
-
-//////////////////////////////////////////////////////////
 let p1 = {
 	move: true,
 	score: 0
@@ -92,6 +44,16 @@ let p2 = {
 	move: false,
 	score: 0
 };
+
+onload = init;
+
+/* function gothru() {
+	for(let row = 0; row < board.length; row++) {
+		for(let col = 0; col < board[row].length; col++) {
+			console.log(board[row][col]);
+		}
+	}
+} */
 
 function handleMoves() {
 	p1.move = p1.move === true ? false : true;
@@ -111,8 +73,7 @@ function handleMoves() {
 
 ///////////////////////////////////////////////
 // Timing function
-let LASTTIME = 0;
-let INTERVAL = 5000;
+
 function loopRAF() {
 	let now = Date.now();
 	if(!LASTTIME) LASTTIME = now;
@@ -146,8 +107,6 @@ function updateScore() {
 }
 
 //////////////////////////////////////////////////////////
-let clicked, first, second = null;
-let tempFirst, tempSecond = null;
 
 function test(event) {
 
@@ -232,23 +191,6 @@ function test(event) {
 
 //////////////////////////////////////////////////////////
 
-const listeners = () => {
-
-	document.querySelectorAll('.cards').forEach(item => {
-		item.addEventListener('click', test)
-	});
-    //handle click
-	//console.log(event.target);
-	//console.log(this);
-	
-	id("menuCreateGame").addEventListener("click", menuCreateGame);
-	id("menuJoinGame").addEventListener("click", menuJoinGame);
-	id("menuAbout").addEventListener("click", menuAbout);
-	id("menuExit").addEventListener("click", menuExit);
-};
-
-//////////////////////////////////////////////////////////
-
 ///////////////////////////
 // Shuffle
 ///////////////////////////
@@ -277,12 +219,34 @@ function shuffleArray(array) {
 // Shuffle
 ///////////////////////////
 
+function make2Darray() {
+	// Counter to make pair values	
+	let c = 0;
+		for(let i = 0; i < grid; i++) {
+			let row = [];
+			
+			for(let j = 0; j < grid; j++) {
+				let col = document.createElement('div');
+				col.className = 'cards';
+				// Increment c
+				c++;
+				// Write c value only if its %2
+				col.innerHTML = c%2 ==0 ? c : c+1;
+				boardElement.appendChild(col);
+				row.push(col);
+			}
+			
+			board.push(row);
+		}
+	}
 
 // Menu function
 function menuCreateGame(){
   // Game runs in background so after clicking on createGame time and moves resets
   p2.move = false; p1.move = true; LASTTIME = 0;  
   id("menu").style.display = "none";
+  // create game
+  socket.emit("newGame");
 }
 function menuJoinGame(){
   p2.move = false; p1.move = true; LASTTIME = 0;   
@@ -331,4 +295,38 @@ function init() {
 	listeners(); // Add event listeners
 }
 
-onload = init;
+///////////////////////////////////
+//////////// UTILITIES ////////////
+///////////////////////////////////
+
+// Selector
+function id(arg){
+	return document.getElementById(arg);
+  } 
+  
+  // Dirty error handling
+  function stoperror(){
+	return true;
+  } //window.onerror = stoperror;
+  
+  // Info text
+  function info(txt) {
+	  id("infos").style.display = 'flex';
+	  id("outputinfos").innerText = txt;
+	  setTimeout(()=>id("infos").style.display = 'none', 1000)
+  }
+
+  function listeners() {
+
+	document.querySelectorAll('.cards').forEach(item => {
+		item.addEventListener('click', test)
+	});
+    //handle click
+	//console.log(event.target);
+	//console.log(this);
+	
+	id("menuCreateGame").addEventListener("click", menuCreateGame);
+	id("menuJoinGame").addEventListener("click", menuJoinGame);
+	id("menuAbout").addEventListener("click", menuAbout);
+	id("menuExit").addEventListener("click", menuExit);
+}
