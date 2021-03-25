@@ -119,7 +119,7 @@ function loopRAF() {
 	let dt = (now - LASTTIME);
 	if(dt >= INTERVAL) {
 		LASTTIME = now;
-		log(dt);
+		// log(dt);
 		handleMoves();
 	}
 	

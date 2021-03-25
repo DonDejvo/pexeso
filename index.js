@@ -3,9 +3,11 @@ const { stat } = require("fs");
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const favicon = require("serve-favicon");
 
 app.use("/assets", express.static("assets"));
 app.use("/scripts", express.static("scripts"));
+app.use(favicon(__dirname + "/favicon.ico"));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
