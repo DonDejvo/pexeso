@@ -1,4 +1,5 @@
 const express = require("express");
+const { stat } = require("fs");
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -89,7 +90,8 @@ io.on('connection', (socket) => {
         const num1 = card_nums[0];
         const num2 = card_nums[1];
 
-        if(roomState.board[num1] == undefined || roomState.board[num2] == undefined) {
+        if(roomState.board[num1] == undefined || roomState.board[num2] == undefined ||
+          roomState.guessed.includes(num1) || roomState.guessed.includes(num2)) {
           return;
         }
 
@@ -103,6 +105,10 @@ io.on('connection', (socket) => {
 
         roomState.timer = 0;
         roomState.state = STATE.SHOWING;
+        roomState.last = socket.number;
+        roomState.timer = 0;
+
+        emitMove(roomName);
       } catch(e) {
 
         console.error(e);
@@ -120,12 +126,20 @@ function gameLoop(roomState) {
 
   roomState.timer++;
 
-  if()
+  if(roomState.state == STATE.SHOWING && roomState.timer > 60) {
+    timer = 0;
+    roomState.state = roomState.last == 2 ? STATE.ONE_PLAYING : STATE.TWO_PLAYING;
+  } else if((roomState.state == STATE.ONE_PLAYING || roomState.state == STATE.TWO_PLAYING) && roomState.timer > 200) {
+    timer = 0;
+    roomState = roomState.state == STATE.ONE_PLAYING ? STATE.TWO_PLAYING : STATE.ONE_PLAYING;
+  }
 
-  return { finished: false, result: [0, 0] };
+  return { finished: roomState.guessed.length == roomState.board.length, result: roomState.players };
 }
 
 function startGameInterval(roomName) {
+
+  state[roomName].state = STATE.ONE_PLAYING;
 
   const interval = setInterval(() => {
 
@@ -149,7 +163,11 @@ function emitGameState(room) {
     board[e] = roomState.board[e];
   });
   
-  io.sockets.in(room).emit("gameState", JSON.stringify({ board: board, players: roomState.players, move: roomState.move }));
+  io.sockets.in(room).emit("gameState", JSON.stringify({ board: board, players: roomState.players, timer: roomState.timer }));
+}
+
+function emitMove(room) {
+  io.sockets.in(room).emit("move", JSON.stringify(state[room].move));
 }
 
 function emitGameOver(room, result) {
@@ -171,7 +189,7 @@ function createGameState() {
     guessed: [],
     players: [ { score: 0 }, { score: 0 } ],
     board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2)),
-    last: undefined
+    last: 0
   };
 }
 
