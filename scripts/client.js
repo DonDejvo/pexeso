@@ -24,7 +24,7 @@ const emojis = [
 
 const socket = io();
 
-let playerNum;
+let playerNum, gameCode;
 let boardElement = null;
 const board = [];
 const grid = 6;
@@ -46,6 +46,29 @@ let p2 = {
 };
 
 onload = init;
+
+socket.on("init", handleInit);
+socket.on("gameCode", handleGameCode);
+socket.on("unknownCode", handleUnknownCode);
+socket.on("tooManyPlayers", handleTooManyPlayers);
+
+function handleInit(num) {
+	id("menu").style.display = "none";
+	playerNum = num;
+}
+
+function handleGameCode(code) {
+	gameCode = code;
+	id("code").innerHTML = "code: " + gameCode;
+}
+
+function handleUnknownCode() {
+
+}
+
+function handleTooManyPlayers() {
+
+}
 
 /* function gothru() {
 	for(let row = 0; row < board.length; row++) {
@@ -244,13 +267,18 @@ function make2Darray() {
 function menuCreateGame(){
   // Game runs in background so after clicking on createGame time and moves resets
   p2.move = false; p1.move = true; LASTTIME = 0;  
-  id("menu").style.display = "none";
+  // id("menu").style.display = "none";
   // create game
   socket.emit("newGame");
 }
 function menuJoinGame(){
   p2.move = false; p1.move = true; LASTTIME = 0;   
-  id("menu").style.display = "none";
+  // id("menu").style.display = "none";
+  // join game
+  const code = prompt("Enter game code: ");
+  if(code) {
+	socket.emit("joinGame", code);
+  }
 }
 function menuAbout(){
   p2.move = false; p1.move = true; LASTTIME = 0;    
@@ -284,6 +312,7 @@ function menu() {
 ///////////////////////////
 function init() {
 	document.body.innerHTML = '<h1>PEXESO</h1>';
+	document.body.innerHTML = '<p id="code"></p>';
 	document.body.innerHTML += '<div id="board"></div>';
 	document.body.innerHTML += '<div class="clear"></div>'+'<div id="p1">p1: 0</div>' + '<div id="p2">p2: 0</div>'
 	document.body.innerHTML += '<div id="infos">' +'<div id="outputinfos"></div>'+'</div>'

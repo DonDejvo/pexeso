@@ -35,16 +35,12 @@ io.on('connection', (socket) => {
 
   function handleJoinGame(roomName) {
 
-    const room = io.sockets.adapter.rooms[roomName];
-
-    let users;
-    if(room) {
-      const users = room.sockets;
-    }
+    const room = io.sockets.adapter.rooms.get(roomName);
 
     let num_users = 0;
-    if(users) {
-      num_users = Object.keys(users).length;
+    if(room) {
+
+      num_users = room.size;
     }
 
     if(num_users == 0) {
@@ -137,7 +133,7 @@ function gameLoop(roomState) {
   roomState.timer > FRAME_RATE * 15) {
     
     timer = 0;
-    roomState = roomState.state == STATE.ONE_PLAYING ? STATE.TWO_PLAYING : STATE.ONE_PLAYING;
+    roomState.state = roomState.state == STATE.ONE_PLAYING ? STATE.TWO_PLAYING : STATE.ONE_PLAYING;
   }
 
   return { finished: roomState.guessed.length == roomState.board.length, result: roomState.players };
@@ -169,15 +165,15 @@ function emitGameState(room) {
     board[e] = roomState.board[e];
   });
   
-  io.sockets.in(room).emit("gameState", JSON.stringify({ state: roomState.state, board: board, players: roomState.players, timer: roomState.timer }));
+  io.to(room).emit("gameState", JSON.stringify({ state: roomState.state, board: board, players: roomState.players, timer: roomState.timer }));
 }
 
 function emitMove(room) {
-  io.sockets.in(room).emit("move", JSON.stringify(state[room].move));
+  io.to(room).emit("move", JSON.stringify(state[room].move));
 }
 
 function emitGameOver(room, result) {
-  io.sockets.in(room).emit("gameOver", JSON.stringify({ result }));
+  io.to(room).emit("gameOver", JSON.stringify({ result }));
 }
 
 function initGame() {
@@ -213,7 +209,7 @@ function makeid(len) {
   const chars_len = chars.length;
   let str = "";
   for(let i = 0; i < len; i++) {
-    str += chars[randint(chars_len)];
+    str += chars[randint(chars_len - 1)];
   }
   return str;
 }
