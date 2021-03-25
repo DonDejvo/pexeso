@@ -7,6 +7,93 @@ body {
   user-select: none; /* Standard syntax */
 }
 
+/*MENU*/
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nadpis {
+  position: relative;
+  top: 0%;
+  font-size: 2.2em;
+}
+
+.nadpis2 {
+  position: relative;
+  top: -9%;
+  font-size: 1.2em;
+}
+
+#menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0%;
+  z-index: 2;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+}
+#menuCreateGame {
+  background-color: gold;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 1px;
+  width: 70%;
+
+}
+#menuJoinGame {
+  background-color: blue;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 1px;
+  width: 70%;
+}
+
+#menuAbout {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 1px;
+  width: 70%;
+}
+
+#menuExit {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 1px;
+  width: 70%;
+}
+/*/MENU*/
+
 .clear {clear: both;}
 
 #board {
