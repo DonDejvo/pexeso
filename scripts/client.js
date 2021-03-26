@@ -30,19 +30,19 @@ const board = [];
 const grid = 6;
 
 let LASTTIME = 0;
-let INTERVAL = 5000;
+let MOVE_INTERVAL = 6;
 
 let clicked, first, second = null;
 let tempFirst, tempSecond = null;
 
 let p1 = {
-	move: true,
-	score: 0
+    move: true,
+    score: 0
 };
 
 let p2 = {
-	move: false,
-	score: 0
+    move: false,
+    score: 0
 };
 
 onload = init;
@@ -86,8 +86,7 @@ function handleGameState() {
 function handleMoves() {
 	p1.move = p1.move === true ? false : true;
 	p2.move = p2.move === true ? false : true;
-	info("NEXT PLAYER");
-	//log(p1.move, p2.move);
+	MOVE_INTERVAL = 6;
 	
 	if(p1.move && !p2.move) {
 		id('p1').style.color = "red";
@@ -106,10 +105,11 @@ function loopRAF() {
 	let now = Date.now();
 	if(!LASTTIME) LASTTIME = now;
 	let dt = (now - LASTTIME);
-	if(dt >= INTERVAL) {
+	if(dt >= 1000) {
 		LASTTIME = now;
 		// log(dt);
-		handleMoves();
+		if(MOVE_INTERVAL > 0) {id("seconds").innerHTML = --MOVE_INTERVAL;}
+		if(MOVE_INTERVAL === 0) { MOVE_INTERVAL = 6; handleMoves(); }
 	}
 	
 	requestAnimationFrame(loopRAF);
@@ -271,13 +271,13 @@ function make2Darray() {
 // Menu function
 function menuCreateGame(){
   // Game runs in background so after clicking on createGame time and moves resets
-  p2.move = false; p1.move = true; LASTTIME = 0;  
+  p2.move = false; p1.move = true; LASTTIME = 0; MENU_INTERVAL = 6; 
   // id("menu").style.display = "none";
   // create game
   socket.emit("newGame");
 }
 function menuJoinGame(){
-  p2.move = false; p1.move = true; LASTTIME = 0;   
+  p2.move = false; p1.move = true; LASTTIME = 0; MENU_INTERVAL = 6;  
   // id("menu").style.display = "none";
   // join game
   const code = prompt("Enter game code: ");
@@ -286,11 +286,11 @@ function menuJoinGame(){
   }
 }
 function menuAbout(){
-  p2.move = false; p1.move = true; LASTTIME = 0;    
+  p2.move = false; p1.move = true; LASTTIME = 0; MENU_INTERVAL = 6;   
   id("menu").style.display = "none";
 } 
 function menuExit(){
-  p2.move = false; p1.move = true; LASTTIME = 0;  
+  p2.move = false; p1.move = true; LASTTIME = 0; MENU_INTERVAL = 6;  
   id("menu").style.display = "none";
 } 
 
@@ -302,7 +302,7 @@ function menu() {
 	document.body.innerHTML +=
 		'<div class="wrapper">'+
 		  '<div id="menu">'+
-            '<div class="nadpis">'+'<h1>PEXESO</h1>'+'</div>'+
+                      '<div class="nadpis">'+'<h1>PEXESO</h1>'+'</div>'+
 			'<div class="nadpis2">'+'<h3>multiplayer game</h3>'+'</div>'+
 			'<button id="menuCreateGame">Create Game</button>'+
 			'<button id="menuJoinGame">Join Game</button>'+
@@ -319,8 +319,8 @@ function init() {
 	document.body.innerHTML = '<h1>PEXESO</h1>';
 	document.body.innerHTML = '<p id="code"></p>';
 	document.body.innerHTML += '<div id="board"></div>';
-	document.body.innerHTML += '<div class="clear"></div>'+'<div id="p1">p1: 0</div>' + '<div id="p2">p2: 0</div>'
-	document.body.innerHTML += '<div id="infos">' +'<div id="outputinfos"></div>'+'</div>'
+	document.body.innerHTML += '<div class="clear"></div>'+'<div id="p1">p1: 0</div>' + '<div id="p2">p2: 0</div>';
+	document.body.innerHTML += '<div id="seconds">'+'</div>';
 	id('p1').style.color = "red";
 	boardElement = id('board');
 	make2Darray();
@@ -342,13 +342,6 @@ function id(arg){
   function stoperror(){
 	return true;
   } //window.onerror = stoperror;
-  
-  // Info text
-  function info(txt) {
-	  id("infos").style.display = 'flex';
-	  id("outputinfos").innerText = txt;
-	  setTimeout(()=>id("infos").style.display = 'none', 1000)
-  }
 
   function listeners() {
 
