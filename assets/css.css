@@ -101,6 +101,7 @@ body {
 	width: 100%;
 	max-width: 400px;
 	margin: 0 auto;
+	color: #2b2e4a;
 }
 
 h1 {text-align: center;}
@@ -109,7 +110,7 @@ h1 {text-align: center;}
 .cards {
   width: 60px;
   height: 60px;
-  background: black;
+  background-color: #2b2e4a;
   margin: 1px;
   float: left;
   cursor: pointer;
