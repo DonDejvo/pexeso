@@ -30,6 +30,8 @@ const emojis = [
 
 const socket = io();
 
+let root;
+
 let playerNum, gameCode;
 let boardElement = null;
 const board = [];
@@ -59,7 +61,7 @@ let p2 = {
 ///////////////////////////
 // Init game
 ///////////////////////////
-onload = init;
+//onload = init;
 
 
 ///////////////////////////
@@ -94,6 +96,8 @@ function handleGameState() {
 	
 }
 
+
+
 /* function gothru() {
 	for(let row = 0; row < board.length; row++) {
 		for(let col = 0; col < board[row].length; col++) {
@@ -102,7 +106,7 @@ function handleGameState() {
 	}
 } */
 
-
+/*
 ///////////////////////////
 // Handle player moves
 ///////////////////////////
@@ -399,3 +403,5 @@ const log = console.log;
 	id("menuAbout").addEventListener("click", menuAbout);
 	id("menuExit").addEventListener("click", menuExit);
 }
+
+*/

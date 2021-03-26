@@ -5,10 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');</style> 
-    <title>Pexeso</title>
+    <title>pexeso</title>
 </head>
 	
 <body>
+    
+    <div id="intro" class="container">
+        <div class="loader"></div>
+    </div>
+
+    <div id="menu" class="container">
+        <h1 class="menu-title">pexeso</h1>
+        <div class="menu"></div>
+        <div class="footer"></div>
+    </div>
+
+    <div id="game" class="container">
+        <h1 class="game-title">pexeso</h1>
+        <div class="header">
+            <div id="status"></div>
+            <div id="gamecode"></div>
+        </div>
+        <div id="board" class="board"></div>
+        <div class="players">
+            <div id="player1"></div>
+            <div id="player2"></div>
+        </div>
+    </div>
+
+    <script src="https://raw.githack.com/DonDejvo/helloworld/main/utils/master.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="scripts/client.js"></script>
 </body>
