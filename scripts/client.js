@@ -1,5 +1,6 @@
-const log = console.log;
-
+///////////////////////////
+// Emojis
+///////////////////////////
 const emojis = [
 	"👹",
 	"👹","🐶",
@@ -22,6 +23,11 @@ const emojis = [
 	"👹","🐺"
 	];
 
+
+///////////////////////////
+// Game variables
+///////////////////////////
+
 const socket = io();
 
 let playerNum, gameCode;
@@ -35,6 +41,11 @@ let MOVE_INTERVAL = 6;
 let clicked, first, second = null;
 let tempFirst, tempSecond = null;
 
+
+///////////////////////////
+// Player object
+///////////////////////////
+
 let p1 = {
     move: true,
     score: 0
@@ -45,7 +56,15 @@ let p2 = {
     score: 0
 };
 
+///////////////////////////
+// Init game
+///////////////////////////
 onload = init;
+
+
+///////////////////////////
+// Socket stuff
+///////////////////////////
 
 socket.on("init", handleInit);
 socket.on("gameCode", handleGameCode);
@@ -83,6 +102,11 @@ function handleGameState() {
 	}
 } */
 
+
+///////////////////////////
+// Handle player moves
+///////////////////////////
+
 function handleMoves() {
 	p1.move = p1.move === true ? false : true;
 	p2.move = p2.move === true ? false : true;
@@ -98,8 +122,10 @@ function handleMoves() {
 	}
 }
 
-///////////////////////////////////////////////
-// Timing function
+
+///////////////////////////
+// Loop rAF timing
+///////////////////////////
 
 function loopRAF() {
 	let now = Date.now();
@@ -122,7 +148,10 @@ function cancelLoopRAF () {
 	cancelAnimationFrame(loopRAF);
 }
 
-///////////////////////////////////////////////
+
+///////////////////////////
+// Update score
+///////////////////////////
 
 function incrementScore() {
 	p1.move === true? p1.score++ : p1.score += 0;
@@ -134,7 +163,10 @@ function updateScore() {
 	id('p2').innerHTML = 'p2: ' + p2.score;
 }
 
-//////////////////////////////////////////////////////////
+
+///////////////////////////
+// Main click function
+///////////////////////////
 
 function test(event) {
 
@@ -190,8 +222,8 @@ function test(event) {
 			});
 			// Turn colors back after few ms
 			setTimeout(function(){
-			first.style.backgroundColor = "black";
-			second.style.backgroundColor = "black";
+			first.style.backgroundColor = "#2b2e4a";
+			second.style.backgroundColor = "#2b2e4a";
 			// Set back number innerHTML values
 			first.innerHTML = tempFirst;
 			second.innerHTML = tempSecond;
@@ -217,11 +249,11 @@ function test(event) {
 	}
 }
 
-//////////////////////////////////////////////////////////
 
 ///////////////////////////
-// Shuffle
+// Shuffle array
 ///////////////////////////
+
 function shuffle() {
   const container = id("board");
   let elementsArray = Array.prototype.slice.call(container.getElementsByClassName('cards'));
@@ -243,8 +275,10 @@ function shuffleArray(array) {
     }
     return array;
 }
+
+
 ///////////////////////////
-// Shuffle
+// Make 2D game array
 ///////////////////////////
 
 function make2Darray() {
@@ -268,7 +302,11 @@ function make2Darray() {
 		}
 	}
 
-// Menu function
+
+///////////////////////////
+// Menu
+///////////////////////////
+
 function menuCreateGame(){
   // Game runs in background so after clicking on createGame time and moves resets
   p2.move = false; p1.move = true; LASTTIME = 0; MENU_INTERVAL = 6; 
@@ -298,6 +336,7 @@ function menuExit(){
 ///////////////////////////
 // Menu
 ///////////////////////////
+
 function menu() {
 	document.body.innerHTML +=
 		'<div class="wrapper">'+
@@ -315,6 +354,7 @@ function menu() {
 ///////////////////////////
 // Init
 ///////////////////////////
+
 function init() {
 	document.body.innerHTML = '<h1>PEXESO</h1>';
 	document.body.innerHTML = '<p id="code"></p>';
@@ -329,9 +369,9 @@ function init() {
 	listeners(); // Add event listeners
 }
 
-///////////////////////////////////
-//////////// UTILITIES ////////////
-///////////////////////////////////
+///////////////////////////
+// Utilities
+///////////////////////////
 
 // Selector
 function id(arg){
@@ -342,6 +382,8 @@ function id(arg){
   function stoperror(){
 	return true;
   } //window.onerror = stoperror;
+
+const log = console.log;
 
   function listeners() {
 
