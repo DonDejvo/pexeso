@@ -1,13 +1,3 @@
-body {
-  padding: 0;
-  margin: 0;   
-  -webkit-user-select: none; /* Safari 3.1+ */
-  -moz-user-select: none; /* Firefox 2+ */
-  -ms-user-select: none; /* IE 10+ */
-  user-select: none; /* Standard syntax */
-  font-family: 'Raleway', sans-serif;
-}
-
 /*MENU*/
 .wrapper {
   display: flex;
@@ -97,14 +87,14 @@ body {
 
 .clear {clear: both;}
 
-#board {
+/*#board {
 	width: 100%;
 	max-width: 400px;
 	margin: 0 auto;
 	color: #2b2e4a;
-}
+}*/
 
-h1 {text-align: center;}
+/*h1 {text-align: center;}*/
 
 /* Cards class, not winning*/
 .cards {
@@ -140,22 +130,23 @@ h1 {text-align: center;}
 #board div { background-color: black; border: 0.7px solid #d7d7d7; box-sizing: border-box; float: left; width: 24px; height: 24px; }
 */
 
-.container {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  position: relative;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.container-flex {
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
   width: 100%;
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
   height: 100%;
+  text-align: center;
+  position: relative;
 }
 
 .button-normal {
@@ -187,17 +178,68 @@ h1 {text-align: center;}
 
 .menu-title {
   text-transform: capitalize;
-  padding: 64px;
+  padding: 8vh 0;
   font-size: 48px;
 }
 
 .menu {
-  
+  margin-top: 30px;
 }
 
 .footer {
   width: 100%;
   text-align: center;
-  padding: 24px 0;
-  align-self: flex-end;
+  padding: 8vh 0;
+  margin-top: 30px;
+}
+
+.game-title {
+  padding: 16px;
+  text-transform: capitalize;
+  font-size: 32px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px;
+  background:burlywood;
+}
+
+.board {
+  width: 80%;
+  max-width: 600px;
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.board > div::before {
+  content: "";
+  padding-bottom: 100%;
+  display: block;
+}
+
+.card {
+  border: 1px solid white;
+  background-color: #2b2e4a;
+}
+
+.players {
+  width: 100%;
+}
+
+.players > div {
+  width: 50%;
+  height: 80px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  flex-direction: column;
+}
+
+.players > div:last-child {
+  float: right;
 }

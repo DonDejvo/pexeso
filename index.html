@@ -14,14 +14,14 @@
         <div class="loader"></div>
     </div>
 
-    <div id="menu" class="container-flex">
+    <div id="menu" class="container">
         <h1 class="menu-title">pexeso</h1>
         <div class="menu">
-            <button class="button-normal" id="create-btn">create game</button>
+            <button class="button-normal" id="create-btn" onclick="createGame()">create game</button>
             <div style="margin-top: 36px;">
                 <input placeholder="game code" class="input-code" id="code-input" type="text">
                 <br>
-                <button style="margin-top: 12px;" class="button-normal" id="join-btn">join game</button>
+                <button style="margin-top: 12px;" class="button-normal" id="join-btn" onclick="joinGame()">join game</button>
             </div>
         </div>
         <div class="footer">
@@ -32,13 +32,23 @@
     <div id="game" class="container">
         <h1 class="game-title">pexeso</h1>
         <div class="header">
-            <div id="status"></div>
-            <div id="gamecode"></div>
+            <div id="status">
+                not started
+            </div>
+            <div id="gamecode">
+                code: -
+            </div>
         </div>
         <div id="board" class="board"></div>
         <div class="players">
-            <div id="player1"></div>
-            <div id="player2"></div>
+            <div id="player1">
+                <h2>you</h2>
+                <p>score: 8</p>
+            </div>
+            <div id="player2">
+                <h2>opponent</h2>
+                <p>score: 8</p>
+            </div>
         </div>
     </div>
 
