@@ -96,7 +96,12 @@ function handleGameState() {
 	
 }
 
+addEventListener("load", () => {
 
+	hide(id("intro"));
+	hide(id("game"));
+
+});
 
 /* function gothru() {
 	for(let row = 0; row < board.length; row++) {
