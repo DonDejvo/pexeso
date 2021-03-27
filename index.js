@@ -28,6 +28,10 @@ const SHOW_TIME = 2;
 const state = {};
 const clientRooms = {};
 
+http.listen(process.env.PORT || 3000, () => {
+  console.log('listening on *:3000');
+});
+
 io.on('connection', (socket) => {
 
   socket.on("newGame", handleNewGame);
@@ -143,10 +147,6 @@ io.on('connection', (socket) => {
 
     }
   }
-});
-
-http.listen(3000, () => {
-  console.log('listening on *:3000');
 });
 
 function gameLoop(roomState) {
