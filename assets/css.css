@@ -110,6 +110,7 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .card-active {
