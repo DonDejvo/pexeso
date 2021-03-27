@@ -37,7 +37,7 @@ function handleGameOver(data) {
 	setTimeout(() => {
 		hide(id("game"));
 		show(id("menu"));
-	}, 3000);
+	}, 5000);
 }
 
 function handleInit(num) {
