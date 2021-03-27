@@ -1,24 +1,7 @@
-/* Winning class*/
-.win {
-  width: 60px;
-  height: 60px;
-  /*
-  background: pink;
-  */
-  margin: 1px;
-  float: left;
-  cursor: pointer;
-  font-size: 40px;
-  text-align: center;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
 }
 
 body {
@@ -114,6 +97,9 @@ body {
   align-items: center;
   font-size: 20px;
   cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 .card-active {
