@@ -34,6 +34,36 @@ io.on('connection', (socket) => {
   socket.on("newGame", handleNewGame);
   socket.on("joinGame", handleJoinGame);
   socket.on("submitMove", handleSubmitMove);
+  socket.on("firstCard", handleFirstCard);
+
+  function handleFirstCard(cardNum) {
+    
+    const roomName = clientRooms[socket.id];
+    if(!roomName) {
+      return;
+    }
+
+    const roomState = state[roomName];
+    if((roomState.state == STATE.ONE_PLAYING && socket.number == 1) ||
+    (roomState.state == STATE.TWO_PLAYING && socket.number == 2)) {
+
+      try {
+
+        const num = parseInt(cardNum);
+
+        if(roomState.board[num] == undefined ||
+          roomState.guessed.includes(num)) {
+          return;
+        }
+  
+        state[roomName].move[0] = num;
+  
+      } catch(e) {
+  
+        console.error(e);
+      }
+    }
+  }
 
   function handleJoinGame(roomName) {
 
@@ -76,7 +106,7 @@ io.on('connection', (socket) => {
     socket.emit("init", 1);
   }
 
-  function handleSubmitMove(card_nums) {
+  function handleSubmitMove(cardNum) {
 
     const roomName = clientRooms[socket.id];
     if(!roomName) {
@@ -84,23 +114,22 @@ io.on('connection', (socket) => {
     }
     
     const roomState = state[roomName];
-    if((roomState.state == STATE.ONE_PLAYING && socket.number == 1) &&
+    if((roomState.state == STATE.ONE_PLAYING && socket.number == 1) ||
     (roomState.state == STATE.TWO_PLAYING && socket.number == 2)) {
 
       try {
 
-        const num1 = card_nums[0];
-        const num2 = card_nums[1];
+        const num = parseInt(cardNum);
 
-        if(roomState.board[num1] == undefined || roomState.board[num2] == undefined ||
-          roomState.guessed.includes(num1) || roomState.guessed.includes(num2)) {
+        if(roomState.board[num] == undefined ||
+          roomState.guessed.includes(num)) {
           return;
         }
 
-        roomState.move[0] = num1;
-        roomState.move[1] = num2;
+        roomState.move[1] = num;
 
-        if(roomState.move[0] == roomState.move[1]) {
+        if(roomState.board[roomState.move[0]] == roomState.board[roomState.move[1]]) {
+          
           roomState.guessed.push(roomState.move[0], roomState.move[1]);
           roomState.players[socket.number - 1].score++;
         }
@@ -108,9 +137,6 @@ io.on('connection', (socket) => {
         roomState.timer = 0;
         roomState.state = STATE.SHOWING;
         roomState.last = socket.number;
-        roomState.timer = 0;
-
-        emitMove(roomName);
       } catch(e) {
 
         console.error(e);
@@ -131,6 +157,8 @@ function gameLoop(roomState) {
   if(roomState.state == STATE.SHOWING && roomState.timer > FRAME_RATE * SHOW_TIME) {
 
     roomState.timer = 0;
+    roomState.move[0] = undefined;
+    roomState.move[1] = undefined;
     roomState.state = roomState.last == 2 ? STATE.ONE_PLAYING : STATE.TWO_PLAYING;
   } else if((roomState.state == STATE.ONE_PLAYING || roomState.state == STATE.TWO_PLAYING) && 
   roomState.timer > FRAME_RATE * MOVE_TIME) {
@@ -164,15 +192,18 @@ function emitGameState(room) {
   const roomState = state[room];
   const board = Array(BOARD_SIZE).fill(0).map(e => -1);
 
+  if(roomState.move[0] != undefined) {
+    board[roomState.move[0]] = roomState.board[roomState.move[0]];
+    if(roomState.move[1] != undefined) {
+      board[roomState.move[1]] = roomState.board[roomState.move[1]];
+    }
+  }
+
   roomState.guessed.forEach(e => {
     board[e] = roomState.board[e];
   });
   
   io.to(room).emit("gameState", JSON.stringify({ state: roomState.state, board: board, players: roomState.players, timer: Math.floor(roomState.timer / FRAME_RATE) }));
-}
-
-function emitMove(room) {
-  io.to(room).emit("move", JSON.stringify(state[room].move));
 }
 
 function emitGameOver(room, result) {
