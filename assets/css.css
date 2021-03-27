@@ -113,6 +113,10 @@ body {
 }
 
 .card-active {
+  background-color:orangered;
+}
+
+.card-guessed {
   background-color: deepskyblue;
 }
 

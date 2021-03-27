@@ -131,15 +131,19 @@ io.on('connection', (socket) => {
 
         roomState.move[1] = num;
 
+        let success = false;
         if(roomState.board[roomState.move[0]] == roomState.board[roomState.move[1]]) {
           
+          success = true;
           roomState.guessed.push(roomState.move[0], roomState.move[1]);
           roomState.players[socket.number - 1].score++;
         }
 
         roomState.timer = 0;
         roomState.state = STATE.SHOWING;
-        roomState.last = socket.number;
+        if(!success) {
+          roomState.last = socket.number;
+        }
       } catch(e) {
 
         console.error(e);
@@ -192,11 +196,14 @@ function emitGameState(room) {
 
   const roomState = state[room];
   const board = Array(BOARD_SIZE).fill(0).map(e => -1);
+  const move = [];
 
   if(roomState.move[0] != undefined) {
-    board[roomState.move[0]] = roomState.board[roomState.move[0]];
+    //board[roomState.move[0]] = roomState.board[roomState.move[0]];
+    move.push({ pos: roomState.move[0] , val: roomState.board[roomState.move[0]] });
     if(roomState.move[1] != undefined) {
-      board[roomState.move[1]] = roomState.board[roomState.move[1]];
+      //board[roomState.move[1]] = roomState.board[roomState.move[1]];
+      move.push({ pos: roomState.move[1] , val: roomState.board[roomState.move[1]] });
     }
   }
 
@@ -204,7 +211,7 @@ function emitGameState(room) {
     board[e] = roomState.board[e];
   });
   
-  io.to(room).emit("gameState", JSON.stringify({ state: roomState.state, board: board, players: roomState.players, timer: Math.floor(roomState.timer / FRAME_RATE) }));
+  io.to(room).emit("gameState", JSON.stringify({ state: roomState.state, board: board, players: roomState.players, timer: Math.floor(roomState.timer / FRAME_RATE), move: move }));
 }
 
 function emitGameOver(room, result) {
