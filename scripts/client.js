@@ -132,7 +132,11 @@ function fillBoard(board, move) {
 	const cards = cl("card");
 	for(let i = 0; i < cards.length; i++) {
 		cards[i].innerHTML = board[i] == -1 ? "" : EMOJI[board[i]];
-		cards[i].classList.remove("card-active");
+		if(move.find(e => e.pos == i)) {
+			cards[i].classList.add("card-active");
+		} else {
+			cards[i].classList.remove("card-active");
+		}
 		if(board[i] == -1) {
 			cards[i].classList.remove("card-guessed");
 		} else {
@@ -141,7 +145,6 @@ function fillBoard(board, move) {
 	}
 	for(let i = 0; i < move.length; i++) {
 		cards[move[i].pos].innerHTML = EMOJI[move[i].val];
-		cards[move[i].pos].classList.add("card-active");
 	}
 }
 
