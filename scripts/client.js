@@ -8,7 +8,7 @@ const STATES = {
 	1: "your turn",
 	2: "opponents turn",
 	3: "showing",
-	4: "no game"
+	4: "game finished"
 };
 
 const socket = io();
@@ -21,6 +21,7 @@ socket.on("gameCode", handleGameCode);
 socket.on("unknownCode", handleUnknownCode);
 socket.on("tooManyPlayers", handleTooManyPlayers);
 socket.on("gameState", handleGameState);
+socket.on("gameOver", handleGameOver);
 
 addEventListener("load", () => {
 
@@ -30,6 +31,10 @@ addEventListener("load", () => {
 	hide(id("game"));
 
 });
+
+function handleGameOver(data) {
+	id("status").innerHTML = STATES[4];
+}
 
 function handleInit(num) {
 	playerNum = num;
