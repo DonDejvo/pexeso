@@ -186,6 +186,7 @@ function startGameInterval(roomName) {
     if(!game.finished) {
       emitGameState(roomName);
     } else {
+      emitGameState(roomName);
       emitGameOver(roomName, game.result);
       clearInterval(interval);
     }

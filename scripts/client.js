@@ -34,10 +34,6 @@ addEventListener("load", () => {
 
 function handleGameOver(data) {
 	id("status").innerHTML = STATES[4];
-	setTimeout(() => {
-		hide(id("game"));
-		show(id("menu"));
-	}, 5000);
 }
 
 function handleInit(num) {
