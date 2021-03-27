@@ -163,6 +163,8 @@ function gameLoop(roomState) {
   } else if((roomState.state == STATE.ONE_PLAYING || roomState.state == STATE.TWO_PLAYING) && 
   roomState.timer > FRAME_RATE * MOVE_TIME) {
     
+    roomState.move[0] = undefined;
+    roomState.move[1] = undefined;
     roomState.timer = 0;
     roomState.state = roomState.state == STATE.ONE_PLAYING ? STATE.TWO_PLAYING : STATE.ONE_PLAYING;
   }
