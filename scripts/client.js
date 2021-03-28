@@ -74,6 +74,15 @@ function handleGameState(data) {
 		status = STATES[4];
 	}
 	id("status").innerHTML = status;
+	
+	if(id("status").innerHTML.indexOf("your") !== -1) {
+		id("playerYou").style.backgroundColor = 'pink';
+		id("playerOpponent").style.backgroundColor = '#fff';
+	}
+	if(id("status").innerHTML.indexOf("opponents") !== -1) {
+		id("playerYou").style.backgroundColor = '#fff';
+		id("playerOpponent").style.backgroundColor = 'pink';
+	}
 
 	id("playerYou").innerHTML = "<h2>you</h2>" + 
 	"<p>score: " + gameState.players[playerNum - 1].score + "</p>";
