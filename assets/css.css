@@ -95,7 +95,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 32px;
   cursor: pointer;
   user-select: none;
   -moz-user-select: none;
