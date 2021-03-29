@@ -6,6 +6,7 @@
 
 body {
   font-family: 'Raleway', sans-serif;
+  touch-action: pan-x pan-y;
 }
 
 .container {
