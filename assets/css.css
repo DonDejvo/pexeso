@@ -2,11 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  touch-action: manipulation;
 }
 
 body {
   font-family: 'Raleway', sans-serif;
-  touch-action: pan-x pan-y;
 }
 
 .container {
