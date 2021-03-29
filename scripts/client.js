@@ -112,10 +112,12 @@ function createBoard() {
 function createEvents() {
 	addEventListener("click", handleClick);
 	addEventListener("gesturestart", e => {
+		alert("gesturestart");
     		e.preventDefault();
   	});
 	addEventListener('touchmove', e => {
     		if(e.scale !== 1) {
+			alert("touchmove");
       			e.preventDefault();
     		}
   	}, {passive: false});
