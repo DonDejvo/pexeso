@@ -111,7 +111,7 @@ function createBoard() {
 
 function createEvents() {
 	addEventListener("click", handleClick);
-	addEventListener("gesturestart", e => {
+	window.addEventListener("gesturestart", e => {
 		alert("gesture catched");
     		e.preventDefault();
   	});
