@@ -115,6 +115,7 @@ function createEvents() {
 		alert("gesture catched");
     		e.preventDefault();
   	});
+	alert("test");
 }
 
 function handleClick(e) {
