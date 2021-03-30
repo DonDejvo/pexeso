@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
 
   function handleNewGame() {
 
-    const roomName = makeid(5);
+    const roomName = makeid(4);
     clientRooms[socket.id] = roomName;
     socket.emit("gameCode", roomName);
 
@@ -248,7 +248,7 @@ function shuffleBoard(state) {
 }
 
 function makeid(len) {
-  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const chars = "abcdefghijklmnpqrstuvwxyz123456789";
   const chars_len = chars.length;
   let str = "";
   for(let i = 0; i < len; i++) {
