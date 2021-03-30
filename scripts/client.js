@@ -120,6 +120,7 @@ function preventZoom(e) {
 
   e.preventDefault();
   e.target.click();
+  alert("preventZoom");
 }
 
 function createEvents() {
