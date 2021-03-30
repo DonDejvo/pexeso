@@ -124,21 +124,18 @@ function preventZoom(e) {
 }
 
 function createEvents() {
-	alert("deployed");
-	addEventListener("click", handleClick);
+	addEventListener('click', handleClick);
 	addEventListener('touchstart', handleClick);
-	addEventListener("gesturestart", e => {
-		alert("gesturestart");
+	addEventListener('gesturestart', e => {
     		e.preventDefault();
   	});
-	//addEventListener('touchmove', e => {
-    	//	if(e.scale !== 1) {
-	//		alert("touchmove");
-      	//		e.preventDefault();
-    	//	}
-  	//}, {passive: false});
+	addEventListener('touchmove', e => {
+    		if(e.scale !== 1) {
+      			e.preventDefault();
+    		}
+  	}, {passive: false});
 	
-	//addEventListener('touchstart', preventZoom); 
+	addEventListener('touchstart', preventZoom); 
 }
 
 function handleClick(e) {
