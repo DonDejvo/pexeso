@@ -1,8 +1,12 @@
+:root {
+  touch-action: pan-x pan-y;
+  height: 100% 
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  touch-action: manipulation;
 }
 
 body {
