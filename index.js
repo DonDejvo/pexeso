@@ -27,8 +27,8 @@ const MOVE_TIME = 10;
 const SHOW_TIME = 2;
 const DIFFICULTY = {
   EASY: 2,
-  MEDIUM: 4,
-  HARD: 8
+  MEDIUM: 6,
+  HARD: 10
 }
 
 const state = {};
