@@ -27,7 +27,7 @@ const MOVE_TIME = 10;
 const SHOW_TIME = 2;
 const DIFFICULTY = {
   EASY: 0.25,
-  MEDIUM: 0.45,
+  MEDIUM: 0.4,
   HARD: 0.6
 }
 
