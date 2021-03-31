@@ -174,9 +174,14 @@ function gameLoop(roomState) {
 
   roomState.timer++;
 
-  if(roomState.single && roomState.state == STATE.TWO_PLAYING && roomState.timer > FRAME_RATE) {
+  if(roomState.single && roomState.state == STATE.TWO_PLAYING) {
 
-    const not_guessed = roomState.board.filter((val, i) => !roomState.guessed.includes(i));
+    const not_guessed = [];
+    for(let i = 0; i < BOARD_SIZE; i++) {
+      if(!roomState.guessed.includes(i)) {
+        not_guessed.push(i);
+      }
+    }
     let randCard1 = randint(not_guessed.length - 1);
     let randCard2 = randint(not_guessed.length - 1);
     if(randCard1 == randCard2) {
