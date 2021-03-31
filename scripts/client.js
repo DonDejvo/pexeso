@@ -116,7 +116,7 @@ function createEvents() {
   		if(typeof(window.ontouchstart) != 'undefined' && e.type == 'mousedown') return;
 
   		handleClick();
-	}
+	});
 	
 	//addEventListener('touchstart', handleClick);
 	addEventListener('gesturestart', e => {
