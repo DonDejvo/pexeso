@@ -51,7 +51,7 @@ body {
 }
 
 .menu {
-  margin-top: 30px;
+  margin-top: 24px;
 }
 
 .menu > *:not(:first-child) {
@@ -61,7 +61,7 @@ body {
 .footer {
   width: 100%;
   text-align: center;
-  padding: 8vh 0;
+  padding: 4vh 0;
   margin-top: 30px;
 }
 
