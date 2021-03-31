@@ -209,9 +209,10 @@ function gameLoop(roomState) {
         break;
       }
     }
-
+      
+    let num1;
     if(!done) {
-    let num1 = randint(not_guessed.length - 1);
+    num1 = randint(not_guessed.length - 1);
     card1 = not_guessed[num1];
     for(let i = 0; i < played.length; i++) {
       const a = played[i];
