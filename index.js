@@ -193,15 +193,10 @@ function gameLoop(roomState) {
         not_guessed.push(i);
       }
     }
-
-    let num1 = randint(not_guessed.length - 1);
-    let num2 = randint(not_guessed.length - 1);
-    if(num1 == num2) {
-      num2 = (num2 + 1) % not_guessed.length;
-    }
-    let card1 = not_guessed[num1];
-    let card2 = not_guessed[num2];
-
+    
+    let card1, card2;
+    let done = false;
+    
     let played = roomState.played.slice();
     played.sort((a, b) => roomState.board[b] - roomState.board[a]);
     for(let i = 0; i < played.length - 1; i++) {
@@ -210,8 +205,30 @@ function gameLoop(roomState) {
       if(not_guessed.includes(a) && roomState.board[a] == roomState.board[b] && a != b) {
         card1 = a;
         card2 = b;
+        done = true;
         break;
       }
+    }
+
+    if(!done) {
+    let num1 = randint(not_guessed.length - 1);
+    card1 = not_guessed[num1];
+    for(let i = 0; i < played.length; i++) {
+      const a = played[i];
+      if(a != card1 && roomState.board[a] == roomState.board[card1]) {
+        done = true;
+        card2 = a;
+        break;
+      }
+    }
+    }
+    
+    if(!done) {
+    let num2 = randint(not_guessed.length - 1);
+    if(num1 == num2) {
+      num2 = (num2 + 1) % not_guessed.length;
+    }
+    card2 = not_guessed[num2];
     }
 
     firstCard(roomState, card1);
