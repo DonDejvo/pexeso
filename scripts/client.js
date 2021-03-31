@@ -110,8 +110,6 @@ function createBoard() {
 }
 
 function createEvents() {
-	alert("test PointerEvent");
-	//addEventListener('click', handleClick);
 	if (window.PointerEvent) {                                  /* decent browsers */
     	addEventListener('pointerdown', handleClick);
 	}
