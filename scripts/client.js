@@ -110,13 +110,17 @@ function createBoard() {
 }
 
 function createEvents() {
-	alert("test");
+	alert("test PointerEvent");
 	//addEventListener('click', handleClick);
-	addEventListener('click', (e) => {
-  		if(typeof(window.ontouchstart) != 'undefined' && e.type == 'mousedown') return;
-
-  		handleClick();
-	});
+	if (window.PointerEvent) {                                  /* decent browsers */
+    	addEventListener('pointerdown', handleClick);
+	}
+	else if (window.TouchEvent) {                               /* mobile Safari */
+    	addEventListener('touchstart', handleClick);
+	}
+	else {                                                      /* desktop Safari */
+    	etouch.addEventListener('mousedown', handleClick);
+	}
 	
 	//addEventListener('touchstart', handleClick);
 	addEventListener('gesturestart', e => {
