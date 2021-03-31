@@ -1,5 +1,6 @@
 const express = require("express");
 const { stat } = require("fs");
+const { cursorTo } = require("readline");
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -144,6 +145,7 @@ function firstCard(roomState, num) {
   }
 
   roomState.move[0] = num;
+  roomState.played.add(num);
 }
 
 function secondCard(roomState, num, playerNum) {
@@ -154,6 +156,7 @@ function secondCard(roomState, num, playerNum) {
   }
 
   roomState.move[1] = num;
+  roomState.played.add(num);
 
   let success = false;
   if(roomState.board[roomState.move[0]] == roomState.board[roomState.move[1]]) {
@@ -182,13 +185,32 @@ function gameLoop(roomState) {
         not_guessed.push(i);
       }
     }
-    let randCard1 = randint(not_guessed.length - 1);
-    let randCard2 = randint(not_guessed.length - 1);
-    if(randCard1 == randCard2) {
-      randCard2 = (randCard2 + 1) % not_guessed.length;
+    let num1 = randint(not_guessed.length - 1);
+    let num2 = randint(not_guessed.length - 1);
+    if(num1 == num2) {
+
+      num2 = (num2 + 1) % not_guessed.length;
     }
-    firstCard(roomState, not_guessed[randCard1]);
-    secondCard(roomState, not_guessed[randCard2], 2);
+
+    let randCard1 = not_guessed[num1];
+    let randCard2 = not_guessed[num2];
+
+    const currentVal = roomState.board[randCard1];
+    for(let i = 0; i < BOARD_SIZE; i++) {
+
+      const val = roomState.board[i];
+      if(currentVal == val && randCard1 != i) {
+
+        if(roomState.played.has(i) && randint(3) == 1) {
+
+          randCard2 = i;
+        }
+        break;
+      }
+    }
+
+    firstCard(roomState, randCard1);
+    secondCard(roomState, randCard2, 2);
   }
 
   if(roomState.state == STATE.SHOWING && roomState.timer > FRAME_RATE * SHOW_TIME) {
@@ -269,7 +291,8 @@ function createGameState(single) {
     players: [ { score: 0 }, { score: 0 } ],
     board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2)),
     last: 0,
-    single: single
+    single: single,
+    played: new Set([])
   };
 }
 
