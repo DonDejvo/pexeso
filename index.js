@@ -26,10 +26,10 @@ const STATE = {
 const MOVE_TIME = 10;
 const SHOW_TIME = 2;
 const DIFFICULTY = {
-  EASY: 2,
-  MEDIUM: 6,
-  HARD: 12,
-  INSANE: 18
+  EASY: 1,
+  MEDIUM: 4,
+  HARD: 8,
+  INSANE: 12
 }
 
 const state = {};
