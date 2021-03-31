@@ -34,39 +34,11 @@ http.listen(process.env.PORT || 3000, () => {
 
 io.on('connection', (socket) => {
 
-  socket.on("newGame", handleNewGame);
+  socket.on("newGame", () => handleNewGame(false));
+  socket.on("newSingleGame", () => handleNewGame(true));
   socket.on("joinGame", handleJoinGame);
   socket.on("submitMove", handleSubmitMove);
   socket.on("firstCard", handleFirstCard);
-
-  function handleFirstCard(cardNum) {
-    
-    const roomName = clientRooms[socket.id];
-    if(!roomName) {
-      return;
-    }
-
-    const roomState = state[roomName];
-    if((roomState.state == STATE.ONE_PLAYING && socket.number == 1) ||
-    (roomState.state == STATE.TWO_PLAYING && socket.number == 2)) {
-
-      try {
-
-        const num = parseInt(cardNum);
-
-        if(roomState.board[num] == undefined ||
-          roomState.guessed.includes(num)) {
-          return;
-        }
-  
-        state[roomName].move[0] = num;
-  
-      } catch(e) {
-  
-        console.error(e);
-      }
-    }
-  }
 
   function handleJoinGame(roomName) {
 
@@ -96,17 +68,45 @@ io.on('connection', (socket) => {
     startGameInterval(roomName);
   }
 
-  function handleNewGame() {
+  function handleNewGame(single) {
 
     const roomName = makeid(4);
     clientRooms[socket.id] = roomName;
     socket.emit("gameCode", roomName);
 
-    state[roomName] = initGame();
+    state[roomName] = initGame(single);
 
     socket.join(roomName);
     socket.number = 1;
     socket.emit("init", 1);
+
+    if(single) {
+      startGameInterval(roomName);
+    }
+  }
+
+  function handleFirstCard(cardNum) {
+    
+    const roomName = clientRooms[socket.id];
+    if(!roomName) {
+      return;
+    }
+  
+    const roomState = state[roomName];
+    if((roomState.state == STATE.ONE_PLAYING && socket.number == 1) ||
+    (roomState.state == STATE.TWO_PLAYING && socket.number == 2)) {
+  
+      try {
+  
+        const num = parseInt(cardNum);
+  
+        firstCard(roomState, num);
+  
+      } catch(e) {
+  
+        console.error(e);
+      }
+    }
   }
 
   function handleSubmitMove(cardNum) {
@@ -119,43 +119,71 @@ io.on('connection', (socket) => {
     const roomState = state[roomName];
     if((roomState.state == STATE.ONE_PLAYING && socket.number == 1) ||
     (roomState.state == STATE.TWO_PLAYING && socket.number == 2)) {
-
+  
       try {
-
+  
         const num = parseInt(cardNum);
+  
+        secondCard(roomState, num, socket.number);
 
-        if(roomState.board[num] == undefined ||
-          roomState.guessed.includes(num)) {
-          return;
-        }
-
-        roomState.move[1] = num;
-
-        let success = false;
-        if(roomState.board[roomState.move[0]] == roomState.board[roomState.move[1]]) {
-          
-          success = true;
-          roomState.guessed.push(roomState.move[0], roomState.move[1]);
-          roomState.players[socket.number - 1].score++;
-        }
-
-        roomState.timer = 0;
-        roomState.state = STATE.SHOWING;
-        if(!success) {
-          roomState.last = socket.number;
-        }
       } catch(e) {
-
+  
         console.error(e);
       }
-
+  
     }
   }
+  
 });
+
+function firstCard(roomState, num) {
+
+  if(roomState.board[num] == undefined ||
+    roomState.guessed.includes(num)) {
+    return;
+  }
+
+  roomState.move[0] = num;
+}
+
+function secondCard(roomState, num, playerNum) {
+
+  if(roomState.board[num] == undefined ||
+    roomState.guessed.includes(num)) {
+    return;
+  }
+
+  roomState.move[1] = num;
+
+  let success = false;
+  if(roomState.board[roomState.move[0]] == roomState.board[roomState.move[1]]) {
+    
+    success = true;
+    roomState.guessed.push(roomState.move[0], roomState.move[1]);
+    roomState.players[playerNum - 1].score++;
+  }
+
+  roomState.timer = 0;
+  roomState.state = STATE.SHOWING;
+  if(!success) {
+    roomState.last = playerNum;
+  }
+}
 
 function gameLoop(roomState) {
 
   roomState.timer++;
+
+  if(roomState.single && roomState.state == STATE.TWO_PLAYING) {
+
+    const not_guessed = roomState.board.filter((val, i) => !roomState.guessed.includes(i));
+    const randCards = Array(2).fill(0).map(e => randint(not_guessed.length - 1));
+    if(randCards[0] == randCards[1]) {
+      randCards[1] = (randCards[1] + 1) % not_guessed.length;
+    }
+    firstCard(roomState, randCards[0]);
+    secondCard(roomState, randCards[1], 2);
+  }
 
   if(roomState.state == STATE.SHOWING && roomState.timer > FRAME_RATE * SHOW_TIME) {
 
@@ -219,13 +247,13 @@ function emitGameOver(room, result) {
   io.to(room).emit("gameOver", JSON.stringify({ result }));
 }
 
-function initGame() {
-  const roomState = createGameState();
+function initGame(single) {
+  const roomState = createGameState(single);
   shuffleBoard(roomState);
   return roomState;
 }
 
-function createGameState() {
+function createGameState(single) {
 
   return {
     timer: 0,
@@ -234,7 +262,8 @@ function createGameState() {
     guessed: [],
     players: [ { score: 0 }, { score: 0 } ],
     board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2)),
-    last: 0
+    last: 0,
+    single: single
   };
 }
 

@@ -181,3 +181,7 @@ function joinGame() {
 	const code = id("code-input").value;
 	socket.emit("joinGame", code);
 }
+
+function createSingleGame() {
+	socket.emit("newSingleGame");
+}
