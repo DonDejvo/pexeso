@@ -25,6 +25,11 @@ const STATE = {
 };
 const MOVE_TIME = 10;
 const SHOW_TIME = 2;
+const DIFFICULTY = {
+  EASY: 0.25,
+  MEDIUM: 0.45,
+  HARD: 0.6
+}
 
 const state = {};
 const clientRooms = {};
@@ -35,8 +40,7 @@ http.listen(process.env.PORT || 3000, () => {
 
 io.on('connection', (socket) => {
 
-  socket.on("newGame", () => handleNewGame(false));
-  socket.on("newSingleGame", () => handleNewGame(true));
+  socket.on("newGame", handleNewGame);
   socket.on("joinGame", handleJoinGame);
   socket.on("submitMove", handleSubmitMove);
   socket.on("firstCard", handleFirstCard);
@@ -69,19 +73,19 @@ io.on('connection', (socket) => {
     startGameInterval(roomName);
   }
 
-  function handleNewGame(single) {
+  function handleNewGame(data) {
 
     const roomName = makeid(4);
     clientRooms[socket.id] = roomName;
     socket.emit("gameCode", roomName);
 
-    state[roomName] = initGame(single);
+    state[roomName] = initGame(data);
 
     socket.join(roomName);
     socket.number = 1;
     socket.emit("init", 1);
 
-    if(single) {
+    if(data.single) {
       startGameInterval(roomName);
     }
   }
@@ -201,7 +205,7 @@ function gameLoop(roomState) {
       const val = roomState.board[i];
       if(currentVal == val && randCard1 != i) {
 
-        if(roomState.played.has(i) && randint(3) == 1) {
+        if(roomState.played.has(i) && Math.random() < roomState.difficulty) {
 
           randCard2 = i;
         }
@@ -275,13 +279,13 @@ function emitGameOver(room, result) {
   io.to(room).emit("gameOver", JSON.stringify({ result }));
 }
 
-function initGame(single) {
-  const roomState = createGameState(single);
+function initGame(data) {
+  const roomState = createGameState(data);
   shuffleBoard(roomState);
   return roomState;
 }
 
-function createGameState(single) {
+function createGameState(data) {
 
   return {
     timer: 0,
@@ -291,7 +295,8 @@ function createGameState(single) {
     players: [ { score: 0 }, { score: 0 } ],
     board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2)),
     last: 0,
-    single: single,
+    single: data.single,
+    difficulty: DIFFICULTY[data.diff] || DIFFICULTY.MEDIUM,
     played: new Set([])
   };
 }

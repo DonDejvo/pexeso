@@ -173,8 +173,19 @@ function fillBoard(board, move) {
 	}
 }
 
-function createGame() {
-	socket.emit("newGame");
+function createGame(single) {
+
+	const diffChoice = document.getElementsByName("diff-choice");
+    let selectedDiff = "1";
+    for(let i = 0; i < diffChoice.length; i++) {
+
+        if(diffChoice[i].checked) {
+
+            selectedDiff = diffChoice[i].value;
+            break;
+        }
+    }
+	socket.emit("newGame", { single: single, diff: selectedDiff });
 }
 
 function joinGame() {

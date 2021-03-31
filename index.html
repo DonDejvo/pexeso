@@ -17,13 +17,30 @@
     <div id="menu" class="container">
         <h1 class="menu-title">pexeso</h1>
         <div class="menu">
-            <button class="button-normal" id="create-btn" onclick="createGame()">create game</button>
+            <button class="button-normal" id="create-btn" onclick="createGame(false)">create game</button>
             <div>
                 <input placeholder="game code" class="input-code" id="code-input" type="text">
                 <br>
                 <button style="margin-top: 12px;" class="button-normal" id="join-btn" onclick="joinGame()">join game</button>
             </div>
-            <button class="button-normal" id="create-single-btn" onclick="createSingleGame()">play with AI</button>
+            <div>
+                <button class="button-normal" id="create-single-btn" onclick="createGame(true)">play with AI</button>
+                <div style="margin-top: 12px;">
+                    <p>select difficulty:</p>
+                    <div>
+                        <input name="diff-choice" type="radio" value="EASY">
+                        <label>easy</label>
+                    </div>
+                    <div>
+                        <input name="diff-choice" type="radio" value="MEDIUM">
+                        <label>medium</label>
+                    </div>
+                    <div>
+                        <input name="diff-choice" type="radio" value="HARD">
+                        <label>hard</label>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="footer">
             <a href="https://github.com/DonDejvo/pexeso">github</a>
