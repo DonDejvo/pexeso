@@ -26,9 +26,9 @@ const STATE = {
 const MOVE_TIME = 10;
 const SHOW_TIME = 2;
 const DIFFICULTY = {
-  EASY: 0.1,
-  MEDIUM: 0.3,
-  HARD: 0.6
+  EASY: 2,
+  MEDIUM: 4,
+  HARD: 8
 }
 
 const state = {};
@@ -149,7 +149,7 @@ function firstCard(roomState, num) {
   }
 
   roomState.move[0] = num;
-  roomState.played.add(num);
+  roomState.played.push(num);
 }
 
 function secondCard(roomState, num, playerNum) {
@@ -160,7 +160,10 @@ function secondCard(roomState, num, playerNum) {
   }
 
   roomState.move[1] = num;
-  roomState.played.add(num);
+  roomState.played.push(num);
+  while(roomState.played.length > roomState.difficulty) {
+    roomState.played.shift();
+  }
 
   let success = false;
   if(roomState.board[roomState.move[0]] == roomState.board[roomState.move[1]]) {
@@ -189,32 +192,29 @@ function gameLoop(roomState) {
         not_guessed.push(i);
       }
     }
+
     let num1 = randint(not_guessed.length - 1);
     let num2 = randint(not_guessed.length - 1);
     if(num1 == num2) {
-
       num2 = (num2 + 1) % not_guessed.length;
     }
+    let card1 = not_guessed[num1];
+    let card2 = not_guessed[num2];
 
-    let randCard1 = not_guessed[num1];
-    let randCard2 = not_guessed[num2];
-
-    const currentVal = roomState.board[randCard1];
-    for(let i = 0; i < BOARD_SIZE; i++) {
-
-      const val = roomState.board[i];
-      if(currentVal == val && randCard1 != i) {
-
-        if(roomState.played.has(i) && Math.random() < roomState.difficulty) {
-
-          randCard2 = i;
-        }
+    let played = roomState.played.slice();
+    played.sort((a, b) => roomState.board[b] - roomState.board[a]);
+    for(let i = 0; i < played.length - 1; i++) {
+      const a = played[i];
+      const b = played[i + 1];
+      if(not_guessed.includes(a) && roomState.board[a] == roomState.board[b] && a != b) {
+        card1 = a;
+        card2 = b;
         break;
       }
     }
 
-    firstCard(roomState, randCard1);
-    secondCard(roomState, randCard2, 2);
+    firstCard(roomState, card1);
+    secondCard(roomState, card2, 2);
   }
 
   if(roomState.state == STATE.SHOWING && roomState.timer > FRAME_RATE * SHOW_TIME) {
@@ -297,7 +297,7 @@ function createGameState(data) {
     last: 0,
     single: data.single,
     difficulty: DIFFICULTY[data.diff] || DIFFICULTY.MEDIUM,
-    played: new Set([])
+    played: []
   };
 }
 
