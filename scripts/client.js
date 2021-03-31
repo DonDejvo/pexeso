@@ -110,7 +110,14 @@ function createBoard() {
 }
 
 function createEvents() {
-	addEventListener('click', handleClick);
+	alert("test");
+	//addEventListener('click', handleClick);
+	addEventListener('click', (e) => {
+  		if(typeof(window.ontouchstart) != 'undefined' && e.type == 'mousedown') return;
+
+  		handleClick();
+	}
+	
 	//addEventListener('touchstart', handleClick);
 	addEventListener('gesturestart', e => {
     		e.preventDefault();
