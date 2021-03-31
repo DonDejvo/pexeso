@@ -174,15 +174,16 @@ function gameLoop(roomState) {
 
   roomState.timer++;
 
-  if(roomState.single && roomState.state == STATE.TWO_PLAYING) {
+  if(roomState.single && roomState.state == STATE.TWO_PLAYING && roomState.timer > FRAME_RATE) {
 
     const not_guessed = roomState.board.filter((val, i) => !roomState.guessed.includes(i));
-    const randCards = Array(2).fill(0).map(e => randint(not_guessed.length - 1));
-    if(randCards[0] == randCards[1]) {
-      randCards[1] = (randCards[1] + 1) % not_guessed.length;
+    let randCard1 = randint(not_guessed.length - 1);
+    let randCard2 = randint(not_guessed.length - 1);
+    if(randCard1 == randCard2) {
+      randCard2 = (randCard2 + 1) % not_guessed.length;
     }
-    firstCard(roomState, randCards[0]);
-    secondCard(roomState, randCards[1], 2);
+    firstCard(roomState, not_guessed[randCard1]);
+    secondCard(roomState, not_guessed[randCard2], 2);
   }
 
   if(roomState.state == STATE.SHOWING && roomState.timer > FRAME_RATE * SHOW_TIME) {
