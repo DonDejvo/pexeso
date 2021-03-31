@@ -28,7 +28,8 @@ const SHOW_TIME = 2;
 const DIFFICULTY = {
   EASY: 2,
   MEDIUM: 6,
-  HARD: 12
+  HARD: 12,
+  INSANE: 18
 }
 
 const state = {};
