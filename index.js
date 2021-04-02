@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
     if(num_users == 0) {
       socket.emit("unknownCode");
       return;
-    } else if(num_users > 1) {
+    } else if(num_users > 1 || state[roomName].single == true) {
       socket.emit("tooManyPlayers");
       return;
     }
