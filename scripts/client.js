@@ -64,11 +64,11 @@ function handleGameState(data) {
 		if(!yourTurn) {
 			firstCard = true;
 		}
-		status = (yourTurn ? STATES[1] : STATES[2]) + " - " + time;
+		status = (yourTurn ? STATES[1] : STATES[2]) + "<br>" + time;
 	} else if(gameState.state == 3) {
 		yourTurn = false;
 		const time = formatTime(SHOW_TIME - gameState.timer);
-		status = STATES[3] + " - " + time;
+		status = STATES[3] + "<br>" + time;
 	} else {
 		yourTurn = false;
 		status = STATES[4];
@@ -176,7 +176,7 @@ function fillBoard(board, move) {
 function createGame(single) {
 
 	const diffChoice = document.getElementsByName("diff-choice");
-    let selectedDiff = "1";
+    let selectedDiff = "MEDIUM";
     for(let i = 0; i < diffChoice.length; i++) {
 
         if(diffChoice[i].checked) {

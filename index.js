@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
 
   function handleNewGame(data) {
 
-    const roomName = makeid(4);
+    const roomName = makeid(5);
     clientRooms[socket.id] = roomName;
     socket.emit("gameCode", roomName);
 
@@ -315,7 +315,7 @@ function createGameState(data) {
     board: Array(BOARD_SIZE).fill(0).map((e, i) => i % (BOARD_SIZE / 2)),
     last: 0,
     single: data.single,
-    difficulty: DIFFICULTY[data.diff] || DIFFICULTY.MEDIUM,
+    difficulty: DIFFICULTY[data.diff] !== undefined ? DIFFICULTY[data.diff] : DIFFICULTY.MEDIUM,
     played: []
   };
 }

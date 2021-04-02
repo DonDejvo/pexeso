@@ -74,9 +74,14 @@ body {
 .header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 8px;
   background:burlywood;
+}
+
+.header > div {
+  flex-basis: 30%;
 }
 
 .board {
