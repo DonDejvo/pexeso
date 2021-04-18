@@ -78,6 +78,7 @@ body {
   width: 100%;
   padding: 8px;
   background:burlywood;
+  min-height: 60px;
 }
 
 .header > div {
