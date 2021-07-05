@@ -111,18 +111,17 @@ function createBoard() {
 
 function createEvents() {
 	if (window.PointerEvent) {                                  /* decent browsers */
-    	addEventListener('pointerdown', handleClick);
+    	    addEventListener('pointerdown', handleClick, false);
 	}
 	else if (window.TouchEvent) {                               /* mobile Safari */
-    	addEventListener('touchstart', handleClick);
+    	    addEventListener('touchstart', handleClick, false);
 	}
 	else {                                                      /* desktop Safari */
-    	etouch.addEventListener('mousedown', handleClick);
+    	    addEventListener('mousedown', handleClick, false);
 	}
-	
-	//addEventListener('touchstart', handleClick);
+
 	addEventListener('gesturestart', e => {
-    		e.preventDefault();
+            e.preventDefault();
   	});
 	addEventListener('touchmove', e => {
     		if(e.scale !== 1) {
